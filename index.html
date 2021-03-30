@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./assets/css/style.css"/>
+    <title>Javascript Quiz</title>
+</head>
+<body>
+    <header>
+        <div class="highscore" id="btnHighScore">Highscores</div>
+        <div class="timer"><h3= class="time"></h3></div>
+    </header>
+    <main>
+        <div id="scores">
+            <ol id="scorelist">
+            </ol>
+        </div>
+
+        <div class="card" id="mainscreen">
+            <h5 class="card-header">Coding Quiz Challenge</h5>
+            <div class="card-body">
+              <h5 class="card-title">Presented are a series of questions to test your understanding of basic Javascript.  Please select the correct answer and then move on.  You will have a limited amount of time and each incorrect answer will deduct time from the clock.</h5>
+              <p>Press <span class="start" Id="btnStart">START</span> to begin</p>
+            </div>
+          </div>
+        </div>
+
+        <div id="currentScoreTitle">
+            <h3>Progress:</h3>
+            <div class="w3-light-grey w3-round" style="width:200;">
+                <div class="progressbar w3-container w3-round w3-blue" style="width:0%">0%</div>
+            </div>
+            <div class="currentscore">
+                <ol id="currentscoreID">
+                </ol>
+            </div>
+        </div>
+    </main>
+    <footer>
+        HW04 - Web APIs Code Quiz
+    </footer>
+    <script src="./assets/js/script.js"></script>
+</body>
+</html>
