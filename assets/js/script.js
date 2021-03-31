@@ -1,4 +1,7 @@
 //Global Variables
+var defaultSeconds = 75; //choose how much starting time
+var penaltySeconds = 20; //choose how much to be penalized for missing a question
+
 var timeEl = document.querySelector(".time");
 var scoresEl = document.getElementById("scores");
 var currentScoreEl = document.getElementById("currentScoreTitle");
@@ -6,13 +9,10 @@ var currentScoreClass = document.querySelector(".currentscore");
 var currentscoreID = document.getElementById("currentscoreID");
 var mainscreen = document.getElementById("mainscreen")
 var btnStart = document.querySelector("#btnStart");
-// var btnSave = document.querySelector("#btnSave");
 var scorelist = document.querySelector("#scorelist");
 var progressbar = document.querySelector(".progressbar");
 var HighScoreForm = document.querySelector("#varHighScore");
 var showscore = false;
-var defaultSeconds = 75;
-var penaltySeconds = 20;
 var secondsLeft;
 var FinalScore = {
     initials: "",
@@ -118,8 +118,6 @@ function startTime(valSeconds) {
     }, 1000);
     return(secondsLeft);
 }
-
-
 
 function saveScore() {
     console.log("saving score...");
@@ -306,9 +304,6 @@ btnStart.addEventListener("click", function() {
     //start quiz
     startQuiz();
     printProgress();
-
-    //print score and enter initials
-    //show High scores, option to [go back] & [clear highscores]
 });
 
 

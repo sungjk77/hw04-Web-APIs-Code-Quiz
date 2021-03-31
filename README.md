@@ -1,7 +1,7 @@
 # hw04-Web-APIs-Code-Quiz
 
-Found live at: 
-GitHub address:
+Found live at: https://sungjk77.github.io/hw04-Web-APIs-Code-Quiz/
+GitHub address: https://github.com/sungjk77/hw04-Web-APIs-Code-Quiz
 
 last modified: 3/25/2021 @ 11:05 PM PST
 
