@@ -4,7 +4,7 @@ Found live at: https://sungjk77.github.io/hw04-Web-APIs-Code-Quiz/
 GitHub address: https://github.com/sungjk77/hw04-Web-APIs-Code-Quiz
 Screenshot: assets\images\screenshot.JPG
 
-last modified: 3/25/2021 @ 11:05 PM PST
+last modified: 3/30/2021 @ 11:30 PM PST
 
 ------------
 Build a timed coding quiz with multiple-choice questions. This app will run in the browser and will feature dynamically updated HTML and CSS powered by JavaScript code that you write. It will have a clean, polished, and responsive user interface. 
@@ -30,6 +30,6 @@ Build a timed coding quiz with multiple-choice questions. This app will run in t
 
 ------------
 ## 📸 _**Screen Shot:**_
-![alt text](https://raw.githubusercontent.com/sungjk77/HW03-Password-Generator/main/assets/images/screenshot.JPG)
+![alt text](https://raw.githubusercontent.com/sungjk77/hw04-Web-APIs-Code-Quiz/main/assets/images/screenshot.JPG)
 
 
