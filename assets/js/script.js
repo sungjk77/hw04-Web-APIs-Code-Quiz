@@ -6,16 +6,20 @@ var currentScoreClass = document.querySelector(".currentscore");
 var currentscoreID = document.getElementById("currentscoreID");
 var mainscreen = document.getElementById("mainscreen")
 var btnStart = document.querySelector("#btnStart");
+// var btnSave = document.querySelector("#btnSave");
 var scorelist = document.querySelector("#scorelist");
 var progressbar = document.querySelector(".progressbar");
+var HighScoreForm = document.querySelector("#varHighScore");
 var showscore = false;
-var defaultSeconds = 100;
+var defaultSeconds = 75;
+var penaltySeconds = 20;
 var secondsLeft;
 var FinalScore = {
     initials: "",
     time: 0,
     correct: 0
 }
+var finishGame=false;
 var varQuiz = [{
     "question":"Commonly used data types DO NOT include",
     "choice1":"strings",
@@ -62,33 +66,21 @@ var varQuiz = [{
     "answered":false
 }
 ];
-
-var varHighScore = ["34 AB","24 AC","14 AD","54 AA", "90 GD"];
+varHighScore = JSON.parse(localStorage.getItem("varHighScore"));
 
 function sendMessage(varMessage) {
-    timeEl.textContent = varMessage;
-    console.log(varMessage);
+    if (varMessage == "finish") {
+        finishGame = true;
+    }
+    if (finishGame) {
+          timeEl.textContent = "";
+    } else {
+          timeEl.textContent = varMessage;
+          console.log(varMessage);
+    }
 }
 
-function startTime(valSeconds) {
-    // Sets interval in variable
-    console.log("start timer")
-    var timerInterval = setInterval(function() {
-      valSeconds--;
-      secondsLeft = valSeconds;
-      timeEl.textContent = secondsLeft + " seconds left";
-      secondsleft = valSeconds;
-      if(secondsLeft === 0) {
-        // Stops execution of action at set interval
-        clearInterval(timerInterval);
-        // Calls function to create and append image
-        sendMessage("Times Up!");
-      }
-    }, 1000);
-    return(secondsLeft);
-  }
-
-function printScore() {
+function printFail() {
     FinalScore.time = secondsLeft;
     FinalScore.correct = 0;
 
@@ -97,18 +89,79 @@ function printScore() {
             FinalScore.correct++;
         }
     }
-
     var varText =  
-    `<h2>Congratulations!</h2>
+    `<h2>GAME OVER</h2>
+        <div>
+            You failed to complete the Quiz in the time allowed!
+        </div>
+        <p>You got `+FinalScore.correct+` out of `+varQuiz.length+` correct
+        <input type="button" value="Try again" onclick="location.reload()">
+        `;
+    mainscreen.innerHTML = varText;
+}
+function startTime(valSeconds) {
+    // Sets interval in variable
+    console.log("start timer")
+    var timerInterval = setInterval(function() {
+      valSeconds--;
+      secondsLeft = valSeconds;
+      timeEl.textContent = secondsLeft + " seconds left";
+      if(secondsLeft < 1 || finishGame) {
+        // Stops execution of action at set interval
+        clearInterval(timerInterval);
+        // Calls function to create and append image
+        sendMessage("Game Over");
+        if(secondsLeft < 1) {
+            printFail();
+        }
+      }
+    }, 1000);
+    return(secondsLeft);
+}
+
+
+
+function saveScore() {
+    console.log("saving score...");
+    var tempText = initialsInput.value.trim();
+ 
+    if (tempText === "") { return; }
+    FinalScore.initials = tempText;
+    varHighScore.push(FinalScore.time+"s "+FinalScore.initials+" "+FinalScore.correct+"/"+varQuiz.length);
+    localStorage.setItem("varHighScore", JSON.stringify(varHighScore));
+}
+
+function clearScore() {
+    varHighScore=[];
+    localStorage.setItem("varHighScore", JSON.stringify(varHighScore));
+}
+function printScore() {
+    FinalScore.time = secondsLeft;
+    if (secondsLeft < 1) {
+        printFail();
+        return;
+    }
+    FinalScore.correct = 0;
+
+    for (var i = 0; i < varQuiz.length; i++) {
+        if(varQuiz[i].answered == varQuiz[i].correct) {
+            FinalScore.correct++;
+        }
+    }
+    sendMessage("finish");
+    var varText =  
+    `<h2>🏆 Congratulations! 🏆</h2>
         <div>
             You completed the Quiz in time!
         </div>
         <p>You got `+FinalScore.correct+` out of `+varQuiz.length+` correct
         <p>Your did it with `+FinalScore.time+` seconds left
-        <p>Please enter your initials to enter your highscore:
-        <p><input type="text" class="form-input" name="initials" placeholder="Your initials here" />
+        <p>Please enter your initials to save your highscore:
+        <p><input type="text" name="initials" id="initialsInput" placeholder="Your initials here" />
+        <p><span class="start margin:10px;" Id="btnSave" onclick="saveScore()">SAVE</span>
+        <p><a href="javascript:clearScore()" Id="btnClear">clear scores</a>
+        <p><a href="javascript:location.reload()" Id="btnClear">Start Over</a>
         `;
-
 
     mainscreen.innerHTML = varText;
 }
@@ -160,19 +213,22 @@ function getAnswer(i) {
     var choice2El = document.getElementById("choice2"); 
     var choice3El = document.getElementById("choice3"); 
     var choice4El = document.getElementById("choice4"); 
-    
+
     if (i < varQuiz.length) {
         console.log("awaiting response for "+i);
         choice1El.addEventListener("click", function() {
             varQuiz[i].answered = 1;
+            if (varQuiz[i].answered != varQuiz[i].correct) {secondsLeft -= penaltySeconds;}
             if (i<varQuiz.length) {
                 i++;
                 printQuestion(i);
                 getAnswer(i);
                 printProgress();
-            } else {printScore();}        });
+            } else {printScore();}        
+        });
         choice2El.addEventListener("click", function() {
             varQuiz[i].answered = 2;
+            if (varQuiz[i].answered != varQuiz[i].correct) {secondsLeft -= penaltySeconds;}
             if (i<varQuiz.length) {
                 i++;
                 printQuestion(i);
@@ -181,27 +237,30 @@ function getAnswer(i) {
             } else {printScore();}
         });
         choice3El.addEventListener("click", function() {
-                varQuiz[i].answered = 3;
-                if (i<varQuiz.length) {
-                    i++;
-                    printQuestion(i);
-                    getAnswer(i);
-                    printProgress();
-                } else {printScore();}
+            varQuiz[i].answered = 3;
+            if (varQuiz[i].answered != varQuiz[i].correct) {secondsLeft -= penaltySeconds;}
+            if (i<varQuiz.length) {
+                i++;
+                printQuestion(i);
+                getAnswer(i);
+                printProgress();
+            } else {printScore();}
         });
         choice4El.addEventListener("click", function() {
-                    varQuiz[i].answered = 4;
-                    if (i<varQuiz.length) {
-                        i++;
-                        printQuestion(i);
-                        getAnswer(i);
-                        printProgress();
-                    } else {printScore();}        });
+            varQuiz[i].answered = 4;
+            if (varQuiz[i].answered != varQuiz[i].correct) {secondsLeft -= penaltySeconds;}
+            if (i<varQuiz.length) {
+                i++;
+                printQuestion(i);
+                getAnswer(i);
+                printProgress();
+            } else {printScore();}        
+        });
     } else {printScore();}
 }
 
 function checkAnswer(i) {
-    if (varQuiz[i].correct = varQuiz[i].answered) {
+    if (varQuiz[i].correct == varQuiz[i].answered) {
         return true;
     } else {return false;}
 }
@@ -218,9 +277,30 @@ function startQuiz() {
         console.log (secondsLeft);
 }
 
-function showDefault() {
-    location.reload();
-}
+btnHighScore.addEventListener("click", function() {
+    console.log(varHighScore);
+    if(varHighScore !== null) {
+        varHighScore.sort();
+        varHighScore.reverse(); 
+
+        if (showscore) {
+            showscore=false;
+            scoresEl.style.display = "none";
+        } else {
+            showscore=true;
+            scorelist.textContent = "";
+            for (var i = 0; i < varHighScore.length; i++) {
+                var score = varHighScore[i];
+                var li = document.createElement("li");
+                li.textContent = score;
+                scorelist.appendChild(li);
+            }
+            scoresEl.style.display = "block";
+            scoresEl.style.height = 50 * varHighScore.length +10+"px";
+        }
+    } else {varHighScore=[];}
+});
+
 btnStart.addEventListener("click", function() {
     startTime(defaultSeconds);
     //start quiz
@@ -228,32 +308,8 @@ btnStart.addEventListener("click", function() {
     printProgress();
 
     //print score and enter initials
-//    printScore();
     //show High scores, option to [go back] & [clear highscores]
-
-  });
-
-btnHighScore.addEventListener("click", function() {
-    var varMessage = "";
-    varHighScore.sort();
-    varHighScore.reverse(); 
-
-    console.log(varHighScore);
-    if (showscore) {
-        showscore=false;
-        scoresEl.style.display = "none";
-    } else {
-        showscore=true;
-        scorelist.textContent = "";
-        for (var i = 0; i < varHighScore.length; i++) {
-            var score = varHighScore[i];
-            var li = document.createElement("li");
-            li.textContent = score;
-            scorelist.appendChild(li);
-        }
-        scoresEl.style.display = "block";
-        scoresEl.style.height = 50 * varHighScore.length +10+"px";
-    }
 });
 
-console.log(varQuiz)
+
+

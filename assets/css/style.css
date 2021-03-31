@@ -121,28 +121,20 @@ footer {
 
 .card {
     background-color: hsl(0, 0%, 100%);
-    border-radius: 5px;
     border-width: 1px;
     box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 8px 0px;
     color: hsl(206, 17%, 28%);
     font-size: 18px;
     margin: 0 auto;
-    max-width: 800px;
+    max-width: 300px;
     padding: 30px 40px;
-  }
-
-
-/*  */
-
-.card {
-    position:relative;
+    position:absolute;
     display:-ms-flexbox;
     display:flex;
     -ms-flex-direction:column;
     flex-direction:column;
-    min-width:0;
+    width:300;
     word-wrap:break-word;
-    background-color:#fff;
     background-clip:border-box;
     border:1px solid rgba(0,0,0,.125);
     border-radius:.25rem;
@@ -166,7 +158,6 @@ footer {
     margin-bottom:.75rem
 }
 
-
 .choice {
   width:300px;
   border-radius: 8px;
@@ -189,11 +180,14 @@ footer {
     object-fit: cover;
     border-radius: 8px;
     background-color: var(--bgcolor2);
-    opacity:80%;
+    opacity:90%;
     text-align: left;
     line-height: 50px;
     font-size: 15px;
     color:black;
+    z-index: 1;
+    overflow:unset;
+    padding: 0px 25px;
 }
 
 #mainscreen {
@@ -212,6 +206,9 @@ footer {
 }
 
 #currentScoreTitle {
+    position: fixed;
+    right:0;
+    text-align: right;
     display: none;
     float: right;
     width: 200px;
@@ -224,6 +221,7 @@ footer {
     font-size: 15px;
     color:black;
     padding: 10px 0;
+    z-index: 1;
 }
 
 .currentscore {
@@ -237,10 +235,11 @@ footer {
     text-align: left;
     font-size: 15px;
     color:black;
-    padding:5px 5px;
     padding: 0px 25px;
+    z-index: 1;
 }
 
+/* took this progress bar color scheme from w3, will modify if time */
 .w3-light-grey
 {color:#000!important;background-color:#f1f1f1!important}
 .w3-round {border-radius:4px}
